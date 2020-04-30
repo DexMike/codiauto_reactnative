@@ -5,7 +5,7 @@ import { Container, Button, H3, Text } from "native-base";
 import styles from "./styles";
 
 const launchscreenBg = require("../../../assets/launchscreen-bg.png");
-const launchscreenLogo = require("../../../assets/logo-kitchen-sink.png");
+const launchscreenLogo = require("../../../assets/logoTemp.png");
 
 class Home extends Component {
   render() {
@@ -23,17 +23,17 @@ class Home extends Component {
               backgroundColor: "transparent"
             }}
           >
-            <H3 style={styles.text}>App to showcase</H3>
+            <H3 style={styles.text}>Generador de cobros</H3>
             <View style={{ marginTop: 8 }} />
-            <H3 style={styles.text}>NativeBase components</H3>
+            <H3 style={styles.text}>CodiPago.mx</H3>
             <View style={{ marginTop: 8 }} />
           </View>
           <View style={{ marginBottom: 80 }}>
             <Button
               style={{ backgroundColor: "#6FAF98", alignSelf: "center" }}
-              onPress={() => this.props.navigation.openDrawer()}
-            >
-              <Text>Lets Go!</Text>
+              // onPress={() => this.props.navigation.openDrawer()}
+              onPress={() => this.props.navigation.navigate("Anatomy")}            >
+              <Text>Generar Codi</Text>
             </Button>
           </View>
         </ImageBackground>
