@@ -1,4 +1,4 @@
-package com.nativebasekitchensink;
+package mx.codipago;
 
 import com.facebook.react.ReactActivity;
 import com.facebook.react.ReactActivityDelegate;

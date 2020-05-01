@@ -20,6 +20,7 @@ import {
 } from "native-base";
 import { View, Image } from "react-native";
 import { Grid, Row } from "react-native-easy-grid";
+import AsyncStorage from "@react-native-community/async-storage";
 // import CodiService from "../../services/CodiService";
 import styles from "./styles";
 
@@ -30,7 +31,9 @@ class Anatomy extends Component {
     this.state = {
       qty: 0,
       created: false,
-      imgData: ""
+      imgData: "",
+      authuserUid: "",
+      clientUid: ""
     };
 
     this.generateQr = this.generateQr.bind(this);
@@ -38,12 +41,30 @@ class Anatomy extends Component {
 
   componentDidMount() {
     this.resetQty();
+    this.getUserData();
   }
 
   resetQty() {
     this.setState({
       qty: 0
     });
+  }
+
+  async getUserData() {
+
+    let authuserUid = "";
+    let clientUid = "";
+    try {
+      authuserUid = await AsyncStorage.getItem("authuserUid") || "";
+      clientUid = await AsyncStorage.getItem("clientUid") || "";
+      this.setState({
+        authuserUid,
+        clientUid
+      });
+    } catch (error) {
+      // Error retrieving data
+      console.log(error.message);
+    }
   }
 
   setQty(value) {
@@ -60,11 +81,11 @@ class Anatomy extends Component {
   }
 
   async generateQr() {
-    const { qty } = this.state;
+    const { qty, authuserUid, clientUid } = this.state;
     console.log("Anatomy -> generateQr -> qty", qty);
     if (qty !== 0) {
       this.setState({
-        imgData: `http://10.0.2.2:3000/centerprise/ugkugku/poijpokpo/dcdfsf/${qty}`
+        imgData: `http://10.0.2.2:3000/centerprise/${clientUid}/poijpokpo/${authuserUid}/${qty}`
       });
     }
     return false;

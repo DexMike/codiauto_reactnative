@@ -1,0 +1,11 @@
+{
+	"web": {
+		"client_id": "100013698037-n715sp0152lhaf2mcqpi11d9r0pbutc9.apps.googleusercontent.com",
+		"project_id": "gente21",
+		"auth_uri": "https://accounts.google.com/o/oauth2/auth",
+		"token_uri": "https://oauth2.googleapis.com/token",
+		"auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+		"client_secret": "854odUfJmKpgLe6lPHZV16v4",
+		"redirect_uris": ["http://codipago.mx/ok"]
+	}
+}

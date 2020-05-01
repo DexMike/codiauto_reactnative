@@ -1,8 +1,10 @@
-package com.nativebasekitchensink;
+package mx.codipago;
 
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import com.reactnativecommunity.asyncstorage.AsyncStoragePackage;
+import co.apptailor.googlesignin.RNGoogleSigninPackage;
 import com.oblador.vectoricons.VectorIconsPackage;
 // import me.jhen.devsettings.DevSettingsPackage;
 import com.swmansion.gesturehandler.react.RNGestureHandlerPackage;
@@ -26,6 +28,8 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            new AsyncStoragePackage(),
+            new RNGoogleSigninPackage(),
             new VectorIconsPackage(),
             // new DevSettingsPackage(),
             new RNGestureHandlerPackage()
