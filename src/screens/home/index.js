@@ -40,6 +40,7 @@ class Home extends Component {
       //for now it's only dummy
 
       // TODO -> move this to a sls call
+      //AQUI ME QUEDO, YA ESTA EL LOGIN EN EL BACKEND, HAY QUE PROBARLO
       const authuserUid = "9310a771-0508-44bd-9f28-9e15a155102f";
       const clientUid = "edf41109-b5bd-42ea-99d3-90473ebe05b7";
 
