@@ -134,6 +134,8 @@ class Anatomy extends Component {
     const { qty } = this.state;
     const authuserUid = await AsyncStorage.getItem("authuserUid") || "";
     const clientUid = await AsyncStorage.getItem("clientUid") || "";
+
+    // TODO: add a random param, so that it won't cache
     const url = `http://10.0.2.2:3000/centerprise/${clientUid}/poijpokpo/${authuserUid}/${qty}`;
     console.log(135, typeof qty, qty, url);
     // If the info is blank, take the user back to th login screen
