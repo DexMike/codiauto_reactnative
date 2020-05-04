@@ -21,9 +21,9 @@ import {
 import { View, Image } from "react-native";
 import { Grid, Row } from "react-native-easy-grid";
 import AsyncStorage from "@react-native-community/async-storage";
-// import CodiService from "../../services/CodiService";
+import CodiService from "../../services/CodiService";
 import styles from "./styles";
-
+import { pass } from "../../utils";
 import { GoogleSignin } from "react-native-google-signin";
 
 // function isFloat(n){
@@ -134,10 +134,19 @@ class Anatomy extends Component {
     const { qty } = this.state;
     const authuserUid = await AsyncStorage.getItem("authuserUid") || "";
     const clientUid = await AsyncStorage.getItem("clientUid") || "";
+    const token = await AsyncStorage.getItem("token") || "";
 
-    // TODO: add a random param, so that it won't cache
-    const url = `http://10.0.2.2:3000/centerprise/${clientUid}/poijpokpo/${authuserUid}/${qty}`;
-    console.log(135, typeof qty, qty, url);
+    const codiRquestData = {
+      clientUid	: clientUid,
+      authUserToken	: token,
+      authUserUid	: authuserUid,
+      amount	: qty
+    };
+
+    // const url = `http://10.0.2.2:3000/centerprise/${clientUid}/${token}/${authuserUid}/${qty}?r=${randomUrl}`;  
+    const newCodi = await CodiService.simpleCodi(codiRquestData);
+    // console.log(135, newCodi.codi);
+
     // If the info is blank, take the user back to th login screen
     if (authuserUid === "" || clientUid === "") {
       this.props.navigation.navigate("Home");
@@ -145,7 +154,7 @@ class Anatomy extends Component {
 
     if (qty !== 0) {
       this.setState({
-        imgData: url
+        imgData: newCodi.codi
       });
     }
     return false;

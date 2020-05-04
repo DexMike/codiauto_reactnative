@@ -5,8 +5,7 @@ const PATH = "/c";
 
 class CodiService extends AgentService {
   static async simpleCodi(data) {
-    const response = await super.post("/centerprise", data);
-    console.log(9, response);
+    const response = await super.post(`${PATH}enterprise`, data);
     return (response);
   }
 }

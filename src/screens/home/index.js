@@ -9,6 +9,7 @@ const launchscreenBg = require("../../../assets/launchscreen-bg.png");
 const launchscreenLogo = require("../../../assets/logoTemp.png");
 
 import { GoogleSignin, statusCodes, GoogleSigninButton } from "react-native-google-signin";
+import UserService from "../../services/UserService";
 
 class Home extends Component {
   constructor(props) {
@@ -39,18 +40,33 @@ class Home extends Component {
       //if login is correct, let's check what's the id of the user and retrieve the clientUid
       //for now it's only dummy
 
+      const data = {
+        email: userInfo.user.email,
+        googleId: userInfo.user.id
+      };
+
+      const loginData = await UserService.aLoginUser(data);
+      console.log(49, loginData);
+
       // TODO -> move this to a sls call
       //AQUI ME QUEDO, YA ESTA EL LOGIN EN EL BACKEND, HAY QUE PROBARLO
-      const authuserUid = "9310a771-0508-44bd-9f28-9e15a155102f";
-      const clientUid = "edf41109-b5bd-42ea-99d3-90473ebe05b7";
+      const authuserUid = loginData[0].uid;
+      const clientUid = loginData[0].clientUid;
+      const token = loginData[0].token;
 
-      if (authuserUid === "" && clientUid === "") {
-        // show fail error (menas that the user does not exists in our database)
+      if (authuserUid === "" || clientUid === "" || token === "") {
+        // show fail error (means that the user does not exists in our database)
+        console.log(58, ">>>LOGIN ERROR----------------->>>>");
+        return false;
       }
+
+      console.log(63, authuserUid, clientUid, token, userInfo.user.photo);
 
       // with that info, let's save the info and then go to the codi page
       await AsyncStorage.setItem("authuserUid", authuserUid);
       await AsyncStorage.setItem("clientUid", clientUid);
+      await AsyncStorage.setItem("token", token);
+      await AsyncStorage.setItem("photo", userInfo.user.photo);
 
       this.setState({ userInfo }, function done() {
         this.props.navigation.navigate("Anatomy");
