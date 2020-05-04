@@ -23,7 +23,7 @@ import { Grid, Row } from "react-native-easy-grid";
 import AsyncStorage from "@react-native-community/async-storage";
 import CodiService from "../../services/CodiService";
 import styles from "./styles";
-import { pass } from "../../utils";
+import { moneyFormatter } from "../../utils";
 import { GoogleSignin } from "react-native-google-signin";
 
 // function isFloat(n){
@@ -140,12 +140,9 @@ class Anatomy extends Component {
       clientUid	: clientUid,
       authUserToken	: token,
       authUserUid	: authuserUid,
-      amount	: qty
+      amount	: qty.toString()
     };
-
-    // const url = `http://10.0.2.2:3000/centerprise/${clientUid}/${token}/${authuserUid}/${qty}?r=${randomUrl}`;  
     const newCodi = await CodiService.simpleCodi(codiRquestData);
-    // console.log(135, newCodi.codi);
 
     // If the info is blank, take the user back to th login screen
     if (authuserUid === "" || clientUid === "") {
@@ -174,7 +171,7 @@ class Anatomy extends Component {
             />
 
             <Text padder>
-              Codi generado por ${qty} pesos
+              Codi generado por {moneyFormatter(qty)} pesos
             </Text>
           </View>
         </React.Fragment>
