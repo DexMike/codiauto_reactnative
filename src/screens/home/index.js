@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { ImageBackground, View, StatusBar } from "react-native";
+import { ImageBackground, View, StatusBar, Toast } from "react-native";
 import { Container, Button, H3, Text } from "native-base";
 import AsyncStorage from "@react-native-community/async-storage";
 
@@ -10,6 +10,7 @@ const launchscreenLogo = require("../../../assets/logoTemp.png");
 
 import { GoogleSignin, statusCodes, GoogleSigninButton } from "react-native-google-signin";
 import UserService from "../../services/UserService";
+import PaymentService from "../../services/PaymentService";
 
 class Home extends Component {
   constructor(props) {
@@ -48,25 +49,38 @@ class Home extends Component {
       const loginData = await UserService.aLoginUser(data);
       console.log(49, loginData);
 
+      // we also need to get a defaultPaymentId since all payments must 
+      // be matched to a payment in the DB
+      const defaultPaymentData = {
+        clientUid: loginData[0].clientUid,
+        authUserToken: loginData[0].token,
+        authUserUid: loginData[0].uid
+      };
+      const defaultPayment = await PaymentService.getDefaultPayment(defaultPaymentData);
+      const dpLength = Object.keys(defaultPayment).length;
+
       // TODO -> move this to a sls call
       //AQUI ME QUEDO, YA ESTA EL LOGIN EN EL BACKEND, HAY QUE PROBARLO
-      const authuserUid = loginData[0].uid;
+      const authUserUid = loginData[0].uid;
       const clientUid = loginData[0].clientUid;
       const token = loginData[0].token;
 
-      if (authuserUid === "" || clientUid === "" || token === "") {
+      if (authUserUid === "" || clientUid === "" || token === "" || dpLength === 0) {
         // show fail error (means that the user does not exists in our database)
         console.log(58, ">>>LOGIN ERROR----------------->>>>");
+        Toast.show({
+          text: "Wrong password!",
+          buttonText: "Okay"
+        });
         return false;
       }
 
-      console.log(63, authuserUid, clientUid, token, userInfo.user.photo);
-
-      // with that info, let's save the info and then go to the codi page
-      await AsyncStorage.setItem("authuserUid", authuserUid);
+      // with that, let's save the info and then go to the codi page
+      await AsyncStorage.setItem("authUserUid", authUserUid);
       await AsyncStorage.setItem("clientUid", clientUid);
       await AsyncStorage.setItem("token", token);
       await AsyncStorage.setItem("photo", userInfo.user.photo);
+      await AsyncStorage.setItem("defaultPayment", JSON.stringify(defaultPayment));
 
       this.setState({ userInfo }, function done() {
         this.props.navigation.navigate("Anatomy");

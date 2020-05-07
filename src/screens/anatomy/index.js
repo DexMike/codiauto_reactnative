@@ -9,6 +9,7 @@ import {
   Icon,
   // Footer,
   // FooterTab,
+  Toast,
   Left,
   Right,
   Body,
@@ -25,10 +26,7 @@ import CodiService from "../../services/CodiService";
 import styles from "./styles";
 import { moneyFormatter } from "../../utils";
 import { GoogleSignin } from "react-native-google-signin";
-
-// function isFloat(n){
-//   return Number(n) === n && n % 1 !== 0;
-// }
+import AuthPaymentService from "../../services/AuthPaymentService";
 
 class Anatomy extends Component {
   constructor(props) {
@@ -36,26 +34,49 @@ class Anatomy extends Component {
 
     this.state = {
       qty: 0,
-      created: false,
       imgData: "",
-      authuserUid: "",
-      clientUid: ""
+      authUserUid: "",
+      clientUid: "",
+      defaultPayment: {},
+      // user data
+      authUserToken: "",
+      success: false,
+       // set only if operation succeeds
     };
 
     this.generateQr = this.generateQr.bind(this);
     this.signOut = this.signOut.bind(this);
+    this.completePayment = this.completePayment.bind(this);
+    this.reset = this.reset.bind(this);
   }
 
   async componentDidMount() {
     console.log(51, "||**************************||");
-    // await GoogleSignin.configure({
-    //   // TODO -> Move this to the env file
-    //   // webClientId:"100013698037-sbd0alfo3dhk1vpbsbl2gsa98em2l59u.apps.googleusercontent.com",// android
-    //   webClientId:"100013698037-n715sp0152lhaf2mcqpi11d9r0pbutc9.apps.googleusercontent.com",// web
-    //   offlineAccess: true
-    // });
-    // this.resetQty();
-    // this.getUserData();
+    const payment = await AsyncStorage.getItem("defaultPayment") || {};
+    const paymentData = JSON.parse(payment);
+    await this.setUserData();
+    this.setPaymentData(paymentData);
+  }
+
+  async setUserData() {
+    const authUserUid = await AsyncStorage.getItem("authUserUid") || "";
+    const clientUid = await AsyncStorage.getItem("clientUid") || "";
+    const authUserToken = await AsyncStorage.getItem("token") || "";
+    this.setState({
+      authUserUid,
+      clientUid,
+      authUserToken
+    }, function done() {
+      console.log(54, "USER INFO LOCALLY SET!", this.state.authUserUid);
+    });
+  }
+
+  setPaymentData(data) {
+    this.setState({
+      defaultPayment: data
+    }, function done() {
+      console.log(70, "Payment data is locally set", this.state.defaultPayment);
+    });
   }
 
   signOut = async () => {
@@ -64,7 +85,7 @@ class Anatomy extends Component {
       await GoogleSignin.revokeAccess();
       await GoogleSignin.signOut();
       this.setState({
-        authuserUid: "",
+        authUserUid: "",
         clientUid: ""
       }, function done() {
         this.props.navigation.navigate("Home");
@@ -74,36 +95,32 @@ class Anatomy extends Component {
     }
   };
 
-  // resetQty() {
-  //   console.log(75, "<<-------------------------->>");
-  //   this.setState({
-  //     qty: 0,
-  //     imgData: ""
-  //   });
-  // }
-
-  // async getUserData() {
-
-  //   let authuserUid = "";
-  //   let clientUid = "";
-  //   try {
-  //     authuserUid = await AsyncStorage.getItem("authuserUid") || "";
-  //     clientUid = await AsyncStorage.getItem("clientUid") || "";
-
-  //     // If the info is blank, take the user back to th login screen
-  //     if (authuserUid === "" || clientUid === "") {
-  //       this.props.navigation.navigate("Home");
-  //     }
-
-  //     this.setState({
-  //       authuserUid,
-  //       clientUid
-  //     });
-  //   } catch (error) {
-  //     // Error retrieving data
-  //     console.log(error.message);
-  //   }
-  // }
+  // This will be removed when we have a real CoDi connection
+  async completePayment() {
+    console.log(100, "Trying to complete payment...");
+    const { defaultPayment, authUserUid, clientUid, qty } = this.state;
+    const data = {
+      authUserUid: authUserUid,
+      paymentUid: defaultPayment.uid,
+      clientUid: clientUid,
+      amount: qty
+    };
+    try {
+      const paymentComplete = await AuthPaymentService.setPayment(data);
+      console.log(108, ">>>PAGO COMPLETO!!!", paymentComplete);
+      this.setState({
+        success: true
+      }, function done() {
+        console.log(114, this.state.success);
+      });
+    } catch (e) {
+      console.log(113, ">>>ERROR EN PAGO!!!", e);
+      Toast.show({
+        text: "Wrong password!",
+        buttonText: "Okay"
+      });
+    }
+  }
 
   setQty(value) {
     // Have to convert the string back to number, this looks ugly AF
@@ -114,11 +131,6 @@ class Anatomy extends Component {
     if (isNaN(val)){
       val = 0;
     }
-
-    ////////////////////////
-    /////// BIG TODO //////
-    ///////////////////////
-    // Falla cuando se resetea a cero
 
     // TODO move this constant to env variable
     if (val > 8000) {
@@ -131,35 +143,41 @@ class Anatomy extends Component {
   }
 
   async generateQr() {
-    const { qty } = this.state;
-    const authuserUid = await AsyncStorage.getItem("authuserUid") || "";
-    const clientUid = await AsyncStorage.getItem("clientUid") || "";
-    const token = await AsyncStorage.getItem("token") || "";
+    const { qty, defaultPayment, clientUid, authUserToken, authUserUid } = this.state;
 
     const codiRquestData = {
-      clientUid	: clientUid,
-      authUserToken	: token,
-      authUserUid	: authuserUid,
+      clientUid,
+      authUserToken,
+      authUserUid,
       amount	: qty.toString()
     };
     const newCodi = await CodiService.simpleCodi(codiRquestData);
 
     // If the info is blank, take the user back to th login screen
-    if (authuserUid === "" || clientUid === "") {
+    if (authUserUid === "" || clientUid === "") {
       this.props.navigation.navigate("Home");
     }
 
     if (qty !== 0) {
       this.setState({
-        imgData: newCodi.codi
+        imgData: newCodi.codi,
+        defaultPaymentTitle: defaultPayment.name
       });
     }
     return false;
   }
 
+  reset() {
+    this.setState({
+      qty: 0,
+      imgData: "",
+      success: false
+    });
+  }
+
   renderQR() {
-    const { imgData, qty } = this.state;
-    if (imgData !== "") {
+    const { imgData, qty, defaultPaymentTitle, success } = this.state;
+    if (imgData !== "" && !success) {
       return (
         <React.Fragment>
           <View>
@@ -169,11 +187,61 @@ class Anatomy extends Component {
               source={{ uri: imgData }}
               onError={ ({ nativeEvent: {error} }) => console.log(61, error) }
             />
-
+            <Text>
             <Text padder>
-              Codi generado por {moneyFormatter(qty)} pesos
+                Codi generado por
+              </Text>
+              <Text style={{ fontWeight: "bold" }}>
+                {moneyFormatter(qty)}
+              </Text>
+              <Text padder>
+                &nbsp;pesos
+              </Text>
             </Text>
+            <Text>
+              {defaultPaymentTitle}
+            </Text>
+            <Button
+              style={{ backgroundColor: "#e7e2e2" }}
+              onPress={this.completePayment}
+            >
+              <Text
+                style={{ color: "#646778" }}
+              >
+                XD
+              </Text>
+            </Button>
           </View>
+        </React.Fragment>
+      );
+    }
+    return false;
+  }
+
+  renderSuccess() {
+    const { success } = this.state;
+    if (success) {
+      return (
+        <React.Fragment>
+          <Image
+            style={{ width: 300, height: 300 }}
+            // resizeMode="contain"
+            source={require("../../../assets/success.gif")}
+            onError={ ({ nativeEvent: {error} }) => console.log(217, error) }
+          />
+          <Text>
+            ¡El pago se completó con éxito!
+          </Text>
+          <Button
+            style={{ backgroundColor: "#e7e2e2" }}
+            onPress={this.reset}
+          >
+            <Text
+              style={{ color: "#646778" }}
+            >
+              Generar nuevo CoDi
+            </Text>
+          </Button>
         </React.Fragment>
       );
     }
@@ -186,6 +254,14 @@ class Anatomy extends Component {
     return (
       <Container style={styles.container}>
         <Header>
+          {/* <Left>
+            <Button
+              transparent
+              onPress={() => this.props.navigation.openDrawer()}
+            >
+              <Icon name="menu" />
+            </Button>
+          </Left> */}
           <Left>
             <Title>CoDi</Title>
           </Left>
@@ -239,6 +315,7 @@ class Anatomy extends Component {
                 <CardItem>
                   <Body>
                     { this.renderQR() }
+                    { this.renderSuccess() }
                   </Body>
                 </CardItem>
               </Card>
