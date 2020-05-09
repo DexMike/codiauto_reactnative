@@ -3,6 +3,9 @@ package mx.codipago;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import io.invertase.firebase.RNFirebasePackage;
+import io.invertase.firebase.messaging.RNFirebaseMessagingPackage; // <-- Add this line
+import io.invertase.firebase.notifications.RNFirebaseNotificationsPackage;
 import com.reactnativecommunity.asyncstorage.AsyncStoragePackage;
 import co.apptailor.googlesignin.RNGoogleSigninPackage;
 import com.oblador.vectoricons.VectorIconsPackage;
@@ -28,11 +31,14 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            new RNFirebasePackage(),
             new AsyncStoragePackage(),
             new RNGoogleSigninPackage(),
             new VectorIconsPackage(),
             // new DevSettingsPackage(),
-            new RNGestureHandlerPackage()
+            new RNGestureHandlerPackage(),
+            new RNFirebaseMessagingPackage(),
+            new RNFirebaseNotificationsPackage()
       );
     }
 

@@ -189,7 +189,7 @@ class Anatomy extends Component {
             />
             <Text>
             <Text padder>
-                Codi generado por
+                Codi generado por&nbsp;
               </Text>
               <Text style={{ fontWeight: "bold" }}>
                 {moneyFormatter(qty)}

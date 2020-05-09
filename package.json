@@ -15,6 +15,7 @@
     "flow-typed": "2.5.1",
     "husky": "0.14.3",
     "jest": "24.1.0",
+    "jetifier": "^1.6.5",
     "metro-react-native-babel-preset": "0.52.0",
     "prettier": "1.5.3",
     "react-test-renderer": "16.6.3"
@@ -22,7 +23,8 @@
   "scripts": {
     "start": "react-native start",
     "android": "react-native run-android",
-    "ios": "react-native run-ios"
+    "ios": "react-native run-ios",
+    "postinstall": "npx jetify"
   },
   "jest": {
     "preset": "react-native",
@@ -33,12 +35,13 @@
   "dependencies": {
     "@react-native-community/async-storage": "^1.9.0",
     "color": "1.0.3",
-    "lodash": "4.17.10",
+    "lodash": "^4.17.10",
     "moment": "2.13.0",
     "native-base": "2.12.1",
     "prop-types": "^15.6.2",
     "react": "16.6.3",
     "react-native": "0.58.5",
+    "react-native-firebase": "^5.6.0",
     "react-native-gesture-handler": "^1.0.15",
     "react-native-google-signin": "^2.1.1",
     "react-native-vector-icons": "^6.3.0",

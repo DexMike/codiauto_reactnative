@@ -1,11 +1,48 @@
 {
-	"web": {
-		"client_id": "100013698037-n715sp0152lhaf2mcqpi11d9r0pbutc9.apps.googleusercontent.com",
-		"project_id": "gente21",
-		"auth_uri": "https://accounts.google.com/o/oauth2/auth",
-		"token_uri": "https://oauth2.googleapis.com/token",
-		"auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
-		"client_secret": "854odUfJmKpgLe6lPHZV16v4",
-		"redirect_uris": ["http://codipago.mx/ok"]
-	}
+  "project_info": {
+    "project_number": "138289237767",
+    "firebase_url": "https://codipago-49d4f.firebaseio.com",
+    "project_id": "codipago-49d4f",
+    "storage_bucket": "codipago-49d4f.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:138289237767:android:573c0e63d4f8baa1973fa2",
+        "android_client_info": {
+          "package_name": "mx.codipago"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "138289237767-1g9a25r19blfnnipr9jppeh44dnj0h9g.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "mx.codipago",
+            "certificate_hash": "42573b65025d42f4d56aa8aae8797688781e19fc"
+          }
+        },
+        {
+          "client_id": "138289237767-85ct41hjne1q80fmnv5aj3nd4uteerkj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCoHaujjjhMHvn1NOZDaQ0P9XadyIZ1ink"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "138289237767-85ct41hjne1q80fmnv5aj3nd4uteerkj.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
 }

@@ -134,6 +134,10 @@ android {
 }
 
 dependencies {
+    implementation project(':react-native-firebase')
+    compile(project(':react-native-firebase')) {   
+        transitive = false
+    }
     implementation project(':@react-native-community_async-storage')
     implementation project(':react-native-google-signin')
     implementation project(':react-native-vector-icons')
@@ -143,12 +147,15 @@ dependencies {
     implementation "com.facebook.react:react-native:+"  // From node_modules
     implementation(project(":react-native-google-signin"))
 
-    //TEST
+    // TEST FIREBASE
+    implementation "com.google.android.gms:play-services-base:17.2.1"
+    implementation "com.google.firebase:firebase-core:15.0.2"
+    implementation 'com.google.firebase:firebase-messaging:20.1.6'
+    
+    //These are for animation support
     compile 'com.facebook.fresco:fresco:1.+'
-
     // For animated GIF support
     compile 'com.facebook.fresco:animated-gif:1.+'
-
     // For WebP support, including animated WebP
     compile 'com.facebook.fresco:animated-webp:1.+'
     compile 'com.facebook.fresco:webpsupport:1.+'
@@ -160,5 +167,6 @@ task copyDownloadableDepsToLibs(type: Copy) {
     from configurations.compile
     into 'libs'
 }
+
 
 apply plugin: 'com.google.gms.google-services'

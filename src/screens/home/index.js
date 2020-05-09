@@ -27,7 +27,7 @@ class Home extends Component {
     await GoogleSignin.configure({
       // TODO -> Move this to the env file
       // webClientId:"100013698037-sbd0alfo3dhk1vpbsbl2gsa98em2l59u.apps.googleusercontent.com",// android
-      webClientId:"100013698037-n715sp0152lhaf2mcqpi11d9r0pbutc9.apps.googleusercontent.com",// web
+      webClientId:"138289237767-85ct41hjne1q80fmnv5aj3nd4uteerkj.apps.googleusercontent.com",// web
       offlineAccess: true
     });
   }
