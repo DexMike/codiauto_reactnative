@@ -1,4 +1,4 @@
-# NativebaseKitchenSink App
+# CoDiPago App
 Generador simple de CoDi empresarial
 
 

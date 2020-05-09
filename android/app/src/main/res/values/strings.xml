@@ -1,4 +1,4 @@
 <resources>
     <!-- If I change this everything fails -->
-    <string name="app_name">NativebaseKitchenSink</string>
+    <string name="app_name">CoDiPago</string>
 </resources>
