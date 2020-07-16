@@ -28,7 +28,7 @@ import { moneyFormatter } from "../../utils";
 import { GoogleSignin } from "react-native-google-signin";
 import AuthPaymentService from "../../services/AuthPaymentService";
 
-class Anatomy extends Component {
+class SetupPhone extends Component {
   constructor(props) {
     super(props);
 
@@ -335,4 +335,4 @@ class Anatomy extends Component {
   }
 }
 
-export default Anatomy;
+export default SetupPhone;

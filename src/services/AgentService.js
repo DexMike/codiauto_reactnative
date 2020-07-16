@@ -1,11 +1,8 @@
 // import AuthService from '../utils/AuthService';
-// TODO use .env for developer's local config
-// const API_ENDPOINT = 'http://localhost:8080';
-// const API_ENDPOINT = 'https://dev.api.mytrelar.com';
-// const API_ENDPOINT = 'https://demo.api.mytrelar.com';
 
 //console.log('process.env', process.env);
 // const API_ENDPOINT = "http://localhost:3000";
+import AsyncStorage from "@react-native-community/async-storage";
 
 const API_ENDPOINT = "http://10.0.2.2:3000";
 
@@ -20,39 +17,39 @@ function arrayBufferToBase64(buffer) {
 
 class AgentService {
   static async getHeaders() {
-    // try {
-    //   if (AuthService.isNonAuthPath(path)) {
-    //     return {
-    //       'Content-Type': 'application/json',
-    //     };
-    //   }
-    //   if (accessToken && idToken) {
-    //     return {
-    //       'Content-Type': 'application/json',
-    //       Authorization: `Bearer ${accessToken}`,
-    //       'Id-Token': idToken
-    //     };
-    //   }
-    //   const currentSession = await AuthService.refreshSession();
-    //   return {
-    //     'Content-Type': 'application/json',
-    //     Authorization: `Bearer ${currentSession.accessToken.jwtToken}`,
-    //     'Id-Token': currentSession.idToken.jwtToken
-    //   };
-    // } catch (err) {
-    //   return {
-    //     'Content-Type': 'application/json'
-    //   };
-    // }
-    return {
-      "Content-Type": "application/json",
-    };
+    try {
+      // if (AuthService.isNonAuthPath(path)) {
+      //   return {
+      //     'Content-Type': 'application/json',
+      //   };
+      // }
+      const userInfo = await JSON.parse(
+        await AsyncStorage.getItem("tempData")
+      );
+      if (userInfo.token) {
+        return {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${userInfo.token}`// ,
+          // 'Id-Token': idToken
+        };
+      }
+      // const currentSession = await AuthService.refreshSession();
+      return {
+        "Content-Type": "application/json"// ,
+        // Authorization: `Bearer ${currentSession.accessToken.jwtToken}`,
+        // 'Id-Token': currentSession.idToken.jwtToken
+      };
+    } catch (err) {
+      return {
+        "Content-Type": "application/json"
+      };
+    }
   }
 
   static async get(path) {
     const input = `${API_ENDPOINT}${path}`;
-    // const headers = await this.getHeaders(path);
-    const headers = await this.getHeaders();
+    const headers = await this.getHeaders(path);
+    // const headers = await this.getHeaders();
     const init = {
       method: "GET",
       headers,
@@ -79,22 +76,22 @@ class AgentService {
   //   return response;
   // }
 
-  static async getPreLogin(path) {
-    const input = `${API_ENDPOINT}${path}`;
-    // const headers = await this.getHeaders(path, accessToken, idToken);
-    const headers = await this.getHeaders();
-    const init = {
-      method: "GET",
-      headers,
-    };
-    const response = await fetch(input, init);
-    return response.json();
-  }
+  // static async getPreLogin(path) {
+  //   const input = `${API_ENDPOINT}${path}`;
+  //   // const headers = await this.getHeaders(path, accessToken, idToken);
+  //   const headers = await this.getHeaders();
+  //   const init = {
+  //     method: "GET",
+  //     headers,
+  //   };
+  //   const response = await fetch(input, init);
+  //   return response.json();
+  // }
 
   static async getText(path) {
     const input = `${API_ENDPOINT}${path}`;
-    // const headers = await this.getHeaders(path);
-    const headers = await this.getHeaders();
+    const headers = await this.getHeaders(path);
+    // const headers = await this.getHeaders();
     const init = {
       method: "GET",
       headers,
@@ -105,7 +102,8 @@ class AgentService {
 
   static async post(path, entity, json = true) {
     const input = `${API_ENDPOINT}${path}`;
-    const headers = await this.getHeaders();
+    // const headers = await this.getHeaders();
+    const headers = await this.getHeaders(path);
     const init = {
       method: "POST",
       headers,
@@ -120,8 +118,8 @@ class AgentService {
 
   static async put(path, entity) {
     const input = `${API_ENDPOINT}${path}`;
-    // const headers = await this.getHeaders(path);
-    const headers = await this.getHeaders();
+    const headers = await this.getHeaders(path);
+    // const headers = await this.getHeaders();
     const init = {
       method: "PUT",
       headers,
@@ -133,8 +131,8 @@ class AgentService {
 
   static async delete(path, entity) {
     const input = `${API_ENDPOINT}${path}`;
-    // const headers = await this.getHeaders(path);
-    const headers = await this.getHeaders();
+    const headers = await this.getHeaders(path);
+    // const headers = await this.getHeaders();
     const init = {
       method: "DELETE",
       headers,

@@ -110,7 +110,7 @@ import AccordionHeaderContentStyle from "./screens/accordion/accordion-header-co
 import AccordionCustomHeaderContent from "./screens/accordion/accordion-custom-header-content";
 
 import Home from "./screens/home/";
-import Anatomy from "./screens/anatomy/";
+import SetupPhone from "./screens/setupPhone/";
 import Footer from "./screens/footer/";
 import NHBadge from "./screens/badge/";
 import NHButton from "./screens/button/";
@@ -141,7 +141,7 @@ import NHDatePicker from "./screens/datepicker/";
 const Drawer = createDrawerNavigator(
   {
     Home: { screen: Home },
-    Anatomy: { screen: Anatomy },
+    SetupPhone: { screen: SetupPhone },
     Header: { screen: Header },
     Footer: { screen: Footer },
     NHBadge: { screen: NHBadge },
