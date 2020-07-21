@@ -24,106 +24,33 @@ class Home extends Component {
   }
 
   async componentDidMount() {
-    // await GoogleSignin.configure({
-    //   // TODO -> Move this to the env file
-    //   // webClientId:"100013698037-sbd0alfo3dhk1vpbsbl2gsa98em2l59u.apps.googleusercontent.com",// android
-    //   webClientId:"138289237767-85ct41hjne1q80fmnv5aj3nd4uteerkj.apps.googleusercontent.com",// web
-    //   offlineAccess: true
-    // });
 
-    // STEP ONE, do we have a phone number?
+    // FOR TESTING PURPOSES!!!
+    // borre todos los datos en storage
+    await AsyncStorage.removeItem("userReqInfo_phone");
+    await AsyncStorage.removeItem("userReqInfo_email");
+    await AsyncStorage.removeItem("userReqInfo_password");
+
+    // STEP ONE, do we have a phone number and an email?
     const phone = await AsyncStorage.getItem("userReqInfo_phone");
-    if (!phone) {
+    const email = await AsyncStorage.getItem("userReqInfo_email");
+    if (!phone || !email) {
       console.log(37, "We don't have the telephone number from the user, ask for it");
       this.props.navigation.navigate("SetupPhone");
     } else {
       console.log(40, ">>>> WE HAVE THE PHONE!!!", phone);
     }
 
+    // check that there is a password saved
+    const password = await AsyncStorage.getItem("userReqInfo_password");
+    if (!password) {
+      this.props.navigation.navigate("SetupPassword");
+    }
 
     // let's go directly to the page where we ask for the phone number
 
   }
 
-  // signIn = async () => {
-  //   try {
-  //     // await GoogleSignin.hasPlayServices();
-  //     const userInfo = await GoogleSignin.signIn();
-  //     console.log(27, "Home -> signIn -> userInfo", userInfo);
-
-  //     //if login is correct, let's check what's the id of the user and retrieve the clientUid
-  //     //for now it's only dummy
-
-  //     const data = {
-  //       email: userInfo.user.email,
-  //       googleId: userInfo.user.id
-  //     };
-
-  //     const loginData = await UserService.aLoginUser(data);
-  //     console.log(49, loginData);
-
-  //     // we also need to get a defaultPaymentId since all payments must 
-  //     // be matched to a payment in the DB
-  //     const defaultPaymentData = {
-  //       clientUid: loginData.body.clientUid,
-  //       authUserToken: loginData.body.token,
-  //       authUserUid: loginData.body.uid
-  //     };
-  //     // const defaultPayment = await PaymentService.getDefaultPayment(defaultPaymentData);
-  //     const defaultPayment = {};
-  //     const dpLength = Object.keys(defaultPayment).length;
-
-  //     // TODO -> move this to a sls call
-  //     //AQUI ME QUEDO, YA ESTA EL LOGIN EN EL BACKEND, HAY QUE PROBARLO
-  //     const authUserUid = loginData.body.uid;
-  //     const clientUid = loginData.body.clientUid;
-  //     const token = loginData.body.token;
-
-  //     if (authUserUid === "" || clientUid === "" || token === "" || dpLength === 0) {
-  //       // show fail error (means that the user does not exists in our database)
-  //       console.log(58, ">>>LOGIN ERROR----------------->>>>");
-  //       Toast.show({
-  //         text: "Wrong password!",
-  //         buttonText: "Okay"
-  //       });
-  //       return false;
-  //     }
-
-  //     // with that, let's save the info and then go to the codi page
-  //     await AsyncStorage.setItem("authUserUid", authUserUid);
-  //     await AsyncStorage.setItem("clientUid", clientUid);
-  //     await AsyncStorage.setItem("token", token);
-  //     await AsyncStorage.setItem("photo", userInfo.user.photo);
-  //     await AsyncStorage.setItem("defaultPayment", JSON.stringify(defaultPayment));
-
-  //     this.setState({ userInfo }, function done() {
-  //       this.props.navigation.navigate("Anatomy");
-  //     });
-  //   } catch (error) {
-  //     console.log(30, "Home -> signIn -> error", error);
-  //     if (error.code === statusCodes.SIGN_IN_CANCELLED) {
-  //       // user cancelled the login flow
-  //     } else if (error.code === statusCodes.IN_PROGRESS) {
-  //       // operation (e.g. sign in) is in progress already
-  //     } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
-  //       // play services not available or outdated
-  //     } else {
-  //       // some other error happened
-  //     }
-  //   }
-  // };
-
-  // renderGoogleButton() {
-  //   return (
-  //     <GoogleSigninButton
-  //       style={{ width: 192, height: 48, alignSelf: "center" }}
-  //       size={GoogleSigninButton.Size.Wide}
-  //       color={GoogleSigninButton.Color.Dark}
-  //       onPress={this.signIn}
-  //       disabled={this.state.isSigninInProgress}
-  //     />
-  //   );
-  // }
 
   render() {
     return (
